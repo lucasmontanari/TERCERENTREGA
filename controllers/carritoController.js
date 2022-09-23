@@ -2,6 +2,21 @@ import { ProductosDao, CarritoDao } from "../daos/selectorDeDaos.js"
 //import ContenedorCarrito from '../contenedores/claseCarrito.js'
 const carrito = CarritoDao
 import { getProductos, postProductos, editProductos, deleteProductos, productos } from '../controllers/productoController.js'
+import Usuario from "../middleware/models.js"
+import path from 'path'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const initCarrito = async (req, resp) =>{
+    let userEmail = req.user.email
+    const existingUser = await Usuario.findOne({ userEmail });
+    if(existingUser.carrito == "nulo"){
+        resp.sendFile(path.join(__dirname, '..', 'public', 'crearCarrito.html'));
+    }else{
+        resp.redirect(`/api/carrito/${req.user.carrito}`)
+    }
+}
 
 const getCarrito = (req, resp) =>{
     const id = String(req.params.id)
@@ -15,10 +30,16 @@ const getCarrito = (req, resp) =>{
     getCarrito();
 }
 
-const postCarrito = (req, resp) =>{
+const postCarrito = async (req, resp) =>{
+    let userEmail = req.user.email
+    const existingUser = await Usuario.findOne({ userEmail });
     const crearCarrito = async () =>{
         try{
-            resp.status(201).json(await carrito.save({productos: [], timestamp: Date.now()}))
+            await carrito.save({productos: [], timestamp: Date.now()})
+            let allCarritos = await carrito.getAll()
+            let carritoActual = allCarritos[allCarritos.length-1]
+            let usuarioUpdate = await Usuario.updateOne({email: userEmail}, {carrito: carritoActual._id})
+            resp.status(201).json(carritoActual)
         }catch(err){
             resp.status(500).json(`Error de servidor ${err}`)
         }
@@ -82,5 +103,6 @@ export {
     deleteCarrito,
     getCarritoProductos,
     postProductoInCarrito,
-    deleteProductoInCarrito
+    deleteProductoInCarrito,
+    initCarrito
 }

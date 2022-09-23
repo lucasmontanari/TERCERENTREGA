@@ -7,5 +7,6 @@ export default mongoose.model('Users',{
     direccion: String,
     edad: Number,
     telefono: String,
-    avatar: String
+    avatar: String,
+    carrito: String
 });

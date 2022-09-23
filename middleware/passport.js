@@ -5,6 +5,7 @@ import passport from "passport"
 import passportLocal from "passport-local"
 const LocalStrategy = passportLocal.Strategy;
 import Usuario from "./models.js"
+import { sendMail } from "./sendMessage.js"
 
 function hashPassword(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -30,8 +31,11 @@ const registerStrategy = new LocalStrategy(
                 direccion: req.body.direccion,
                 edad: req.body.edad,
                 telefono: req.body.telefono,
-                avatar: `http://localhost:8080/api/uploads/${req.file.originalname}`
+                avatar: `http://localhost:8080/api/uploads/${req.file.originalname}`,
+                carrito: null
             };
+
+            sendMail("nuevo registro", newUser)
 
             const createdUser = await Usuario.create(newUser);
 

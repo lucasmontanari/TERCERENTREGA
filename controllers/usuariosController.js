@@ -26,12 +26,12 @@ function getSignup(req, res) {
 
 function postLogin(req, res) {
     let user = req.user;
-    res.redirect("/api/login")
+    res.redirect("/api/home")
 }
 
 function postSignup(req, res) {
     let user = req.user;
-    res.redirect("/api/login")
+    res.redirect("/api/home")
     //res.sendFile(path.join(__dirname, '..', 'public', "home.html"));
 }
 
@@ -56,6 +56,21 @@ function failRoute(req, res) {
     res.status(404).render("routing-error", {});
 }
 
+function home(req, res) {
+    if (req.isAuthenticated()) {
+        let user = req.user;
+        res.render("home", {
+            nombre: user.nombre,
+            direccion: user.direccion,
+            email: user.email,
+            edad: user.edad,
+            avatar: user.avatar
+        });
+    } else {
+        res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
+    }
+}
+
 
 export {
     getRoot,
@@ -66,5 +81,6 @@ export {
     failRoute,
     getSignup,
     postSignup,
-    getFailregister
+    getFailregister,
+    home
 };
