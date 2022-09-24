@@ -19,8 +19,10 @@
     <br>
     <div class="row justify-content-center align-items-center">
         <div class="col-md-5">
-            <div class="container-sm border rounded p-3" style="background-color: red;color: white;">
+            <div class="container-sm border rounded" style="background-color: red;color: white;">
                 <h1>No se encontro la Ruta</h1>
+                <h2> ERROR: <%= error %> </h2>
+                <h2> <%= descripcion %> </h2>
             </div>
         </div>
     </div>
@@ -31,7 +33,7 @@
 
         function volver() {
             console.log('volver');
-            setTimeout(redireccionar, 2000, '/api/');
+            setTimeout(redireccionar, 2000, '/api/home');
         }
 
         volver();

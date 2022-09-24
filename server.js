@@ -1,7 +1,6 @@
 import 'dotenv/config'
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, SESSION_SECRET, MODO } = process.env;
 import express from 'express'
-import multer from "multer";
 import rutas from './routes/rutas.js'
 import path from 'path'
 import { dirname } from 'path';
@@ -20,8 +19,9 @@ app.set('view engine', 'ejs')
 
 //BASE DE DATOS
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`)
-console.log('Conexion establecida')
+logger.info('Conexion establecida')
 
 //PASSPORT
 import { passportSetup } from './middleware/passport.js';
@@ -30,10 +30,15 @@ import session from "express-session"
 import passport from "passport"
 
 passportSetup(passport);
-
+const mongoOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 app.use(
     session({
+        store: MongoStore.create({
+            mongoUrl:
+              `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`,
+            mongoOptions
+          }),
         secret: SESSION_SECRET,
         cookie: {
             httpOnly: false,
@@ -52,14 +57,18 @@ app.use(passport.session());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+//LOGGER
+import logger from './logger/logger.js';
+
+//CLUSTER
+
 if ((modo == "CLUSTER" && cluster.isPrimary)) {
     cpus.map(() => {
         cluster.fork();
     });
 
     cluster.on("exit", (worker) => {
-        console.log(`Worker ${worker.process.pid} died`);
-
+        logger.info(`Worker ${worker.process.pid} died`)
         cluster.fork()
     })
 } else {
@@ -67,15 +76,11 @@ if ((modo == "CLUSTER" && cluster.isPrimary)) {
 
     app.use('/api/', rutas)
 
-    app.all("*", function (req, res) {
-        res.status(404).json({ error: -2, descripcion: `ruta '${req.path}' metodo '${req.method}' no implementada` })
-    });
-
     app.listen(puerto, err => {
         if (err) {
-            console.log(`Se produjo un error al iniciar el servidor ${err}`)
+            logger.error(`Se produjo un error al iniciar el servidor ${err}`)
         } else {
-            console.log(`El servidor esta escuchando el puerto ${puerto}`)
+            logger.info(`El servidor esta escuchando el puerto ${puerto}`)
         }
 
     })

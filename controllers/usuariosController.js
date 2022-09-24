@@ -1,3 +1,4 @@
+import logger from '../logger/logger.js'
 import path from 'path'
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -36,12 +37,12 @@ function postSignup(req, res) {
 }
 
 function getFaillogin(req, res) {
-    console.log("error en login");
+    logger.error("Error en login")
     res.render("login-error", {});
 }
 
 function getFailregister(req, res) {
-    console.log("error en register");
+    logger.error("Error en Registro")
     res.render("register-error", {});
 }
 

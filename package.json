@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.6.0",
     "dotenv": "^16.0.2",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
@@ -20,6 +21,8 @@
     "nodemailer": "^6.7.8",
     "os": "^0.1.2",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "twilio": "^3.82.1",
+    "winston": "^3.8.2"
   }
 }

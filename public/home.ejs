@@ -12,7 +12,7 @@
     <script src="./ejs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <title>Desafio 14</title>
+    <title>Home</title>
 </head>
 
 <body>
@@ -32,9 +32,9 @@
                 </h3>
                 <h3>Avatar: <img height="75px" src=<%=avatar %> alt=<%= nombre %> />
                 </h3>
-                <div class="col">
-                    <button class="btn btn-danger my-5" onclick="logout()">Logout</button>
-                </div>
+                <form id="formLogout" action="/api/logout" method="get">
+                    <button type="submit" class="btn btn-danger btn-lg">Logout</button>
+                </form>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/api/productos">Productos</a>
@@ -44,7 +44,6 @@
             </li>
         </ul>
     </main>
-    <script src="./cliente.js"></script>
 </body>
 
 </html>

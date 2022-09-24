@@ -45,7 +45,7 @@ export default class ContenedorProducto{ //module.exports permite importar la cl
             if(data){return data} //Si no hay data no retorna nada y muestra el mensaje catcheado por que ocurre un error
         }
         catch(error){
-            console.log("El archivo no contiene ningun producto")
+            logger.warn("El archivo no contiene ningun producto")
         }
     }
 

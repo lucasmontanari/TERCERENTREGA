@@ -41,7 +41,7 @@ const registerStrategy = new LocalStrategy(
 
             return done(null, createdUser);
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             done(err);
         }
     }
@@ -59,7 +59,7 @@ const loginStrategy = new LocalStrategy(
 
             return done(null, user);
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             done(err);
         }
     });

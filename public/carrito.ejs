@@ -12,7 +12,7 @@
     <script src="./ejs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <title>Productos</title>
+    <title>Carrito</title>
 </head>
 
 <body>
@@ -22,9 +22,14 @@
                 <a class="nav-link" href="/api/home">Usuario</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/api/productos">Productos</a>
-                <% if(productosEnviar.length) {%>
-                    <% productosEnviar.map(producto=>{ %>
+                <a class="nav-link" href="/api/productos">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/api/carrito">Carrito</a>
+                <h1>Carrito de <%= carritoEnviar[0].usuario %>, <%= carritoEnviar[0].usuarioEmail %> </h1>
+                <% const productosRender = carritoEnviar[0].productos%>
+                <% if(productosRender.length) {%>
+                    <% productosRender.map(producto=>{ %>
                         <div class="card" style="width: 18rem;">
                             <img src=<%=producto.foto %> class="card-img-top" alt=<%=producto.nombre %>>
                                 <div class="card-body">
@@ -32,8 +37,9 @@
                                         <%= producto.nombre %>
                                     </h5>
                                     <p class="card-text"><%= producto.descripcion %></p>
-                                    <form id="form<%= producto.nombre %>" action="/api/carrito/<%= producto._id %>/productos" method="post">
-                                        <button type="submit" class="btn btn-primary btn-lg">Agregar al carrito</button>
+<!-- QUISE PONER UN BOTON PARA QUITAR LOS PRODUCTOS DEL CARRITO PERO NO PUEDO ENVIAR EL METHOD DELETE POR FORM, LO DEJO COMO IDEA PERO NO FUNCIONA -->
+                                    <form id="form<%= producto.nombre %>" action="/api/carrito/<%= carritoEnviar[0]._id %>/productos/<%= producto._id %>" method="delete">
+                                        <button type="submit" class="btn btn-danger btn">Quitar del carrito</button>
                                     </form>
                                 </div>
                         </div>
@@ -50,9 +56,9 @@
                                     </div>
                                 </div>
                                 <% } %>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/api/carrito">Carrito</a>
+                                <form id="formIniciarCompra" action="/api/iniciarPedido" method="post">
+                                    <button type="submit" class="btn btn-primary btn-lg">Enviar Pedido</button>
+                                </form>
             </li>
         </ul>
     </main>
